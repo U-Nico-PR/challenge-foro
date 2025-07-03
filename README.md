@@ -5,7 +5,7 @@
 <p>OBJETIVO: Hacer, a nivel de back-end, un foro usando Spring Boot para lograr una API REST.<br>
 </p>
 
-# Que se permita a los Usuarios
+# Donde se les permite a los Usuarios
 
 - Crear un nuevo tópico
 - Mostrar todos los tópicos creados
