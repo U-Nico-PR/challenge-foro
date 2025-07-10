@@ -1,30 +1,35 @@
 package com.aluracursos.challenge_foro.domain.curso;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "Curso")
-@Table(name = "cursos")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
+@Embeddable
 public class Curso {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String nombre;
+    private String nombre_curso;
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
-    public Curso(DatosRegistroCurso datos) {
-        this.id = null;
-        this.nombre = datos.nombre();
-        this.categoria = datos.categoria();
+    public Curso(DatosCurso curso) {
+        this.nombre_curso = curso.nombre();
+        this.categoria = curso.categoria();
+    }
+
+    public void actualizar(DatosCurso curso) {
+        if(curso.nombre() != null){
+            this.nombre_curso = curso.nombre();
+        }
+        if(curso.categoria() != null){
+            this.categoria = curso.categoria();
+        }
     }
 }

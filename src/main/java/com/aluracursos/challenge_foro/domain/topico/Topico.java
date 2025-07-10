@@ -1,8 +1,8 @@
 package com.aluracursos.challenge_foro.domain.topico;
 
 import com.aluracursos.challenge_foro.domain.curso.Curso;
-import com.aluracursos.challenge_foro.domain.usuario.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,37 +13,45 @@ import java.time.LocalDateTime;
 @Entity(name = "Topico")
 @Table(name = "topicos")
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Topico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String titulo;
     private String mensaje;
     private LocalDateTime fecha;
+    private String autor;
     private String status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "curso_id")
+    @Embedded
     private Curso curso;
 
-    @Override
-    public String toString() {
-        return "Topico{" +
-                "id=" + id +
-                ", titulo='" + titulo + '\'' +
-                ", mensaje='" + mensaje + '\'' +
-                ", fecha=" + fecha +
-                ", status='" + status + '\'' +
-                ", curso=" + curso +
-                '}';
+    public Topico(DatosRegistroTopico datos) {
+        this.id = null;
+        this.titulo = datos.titulo();
+        this.mensaje = datos.mensaje();
+        this.fecha = LocalDateTime.now();
+        this.autor = datos.autor();
+        this.status = "Sin respuesta";
+        this.curso = new Curso(datos.curso());
+    }
+
+    public void actualizarTopic(DatosActualizarTopico datos) {
+        if(datos.titulo() != null){
+            this.titulo = datos.titulo();
+        }
+        if(datos.mensaje() != null){
+            this.mensaje = datos.mensaje();
+        }
+        if(datos.autor() != null){
+            this.autor = datos.autor();
+        }
+        if(datos.curso() != null){
+            this.curso.actualizar(datos.curso());
+        }
+        this.fecha = LocalDateTime.now();
     }
 }

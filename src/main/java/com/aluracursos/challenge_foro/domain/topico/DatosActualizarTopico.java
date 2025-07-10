@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record DatosRegistroTopico(
+public record DatosActualizarTopico(
         @NotBlank String titulo,
         @NotBlank String mensaje,
         @NotBlank String autor,
