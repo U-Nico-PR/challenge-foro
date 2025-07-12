@@ -21,50 +21,36 @@ import java.util.Optional;
 public class TopicoController {
 
     @Autowired
-    private ITopicoRepository repository;
+    private TopicoService service;
 
-    @Transactional
     @PostMapping
     public ResponseEntity registrar(@RequestBody @Valid DatosRegistroTopico datos, UriComponentsBuilder uriComponentsBuilder) {
-        var topico = new Topico(datos);
-        repository.save(topico);
+        var topico = service.registrar(datos);
         var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
         return ResponseEntity.created(uri).body(new DatosDetalleTopico(topico));
     }
 
     @GetMapping
     public ResponseEntity<Page<DatosDetalleTopico>> listar(@PageableDefault(size = 10, sort = {"fecha"}, direction = Sort.Direction.ASC) Pageable paginacion){
-        var page = repository.findAll(paginacion).map(DatosDetalleTopico::new);
+        var page = service.listar(paginacion);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity detallar(@PathVariable Long id) {
-        var topico = repository.getReferenceById(id);
+        var topico = service.detallar(id);
         return ResponseEntity.ok(new DatosDetalleTopico(topico));
     }
 
-    @Transactional
     @PutMapping("/{id}")
     public ResponseEntity actualizar(@PathVariable Long id, @RequestBody @Valid DatosActualizarTopico datos) {
-        Optional<Topico> topicoBuscado = repository.findById(id);
-        Topico topico = null;
-        if(topicoBuscado.isPresent()){
-            topico = topicoBuscado.get();
-            topico.actualizarTopic(datos);
-        } else {
-            throw new EntityNotFoundException();
-        }
+        var topico = service.actualizar(id,datos);
         return ResponseEntity.ok(new DatosDetalleTopico(topico));
     }
 
-    @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity eliminar(@PathVariable Long id){
-        Optional<Topico> topicoAEliminar = repository.findById(id);
-        if(topicoAEliminar.isPresent()){
-            repository.deleteById(id);
-        }
+        service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
 }
