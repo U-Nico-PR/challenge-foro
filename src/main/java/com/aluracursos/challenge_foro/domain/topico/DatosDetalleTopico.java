@@ -4,7 +4,7 @@ import com.aluracursos.challenge_foro.domain.curso.Curso;
 
 import java.time.LocalDateTime;
 
-public record DatosListaTopicos(
+public record DatosDetalleTopico(
         Long id,
         String titulo,
         String mensaje,
@@ -13,7 +13,7 @@ public record DatosListaTopicos(
         String autor,
         Curso curso
 ) {
-    public DatosListaTopicos(Topico topico) {
+    public DatosDetalleTopico(Topico topico) {
         this(
                 topico.getId(),
                 topico.getTitulo(),
