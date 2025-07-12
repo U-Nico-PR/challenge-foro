@@ -1,5 +1,6 @@
 package com.aluracursos.challenge_foro.infra.exceptions;
 
+import com.aluracursos.challenge_foro.domain.ValidarException;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GestorDeErrores {
+
+    @ExceptionHandler(ValidarException.class)
+    public ResponseEntity errorValidacion(ValidarException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity gestionarError404() {
